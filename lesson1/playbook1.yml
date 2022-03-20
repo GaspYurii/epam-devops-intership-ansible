@@ -1,0 +1,35 @@
+---
+- name: Inslall Apache web server and demo web page to example servers
+  hosts: exampleservers 
+  become: yes
+
+
+  vars:
+    source_file: /home/ansible/ansible-homework/lesson1/index.html
+    destination_file: /var/www/html
+
+
+  tasks:
+
+  - name: Install Apache Web Server
+    yum: name=httpd state=latest
+
+  - name: Copy index.html to example servers
+    copy: src={{ source_file }} dest={{ destination_file }} mode=0555
+    notify: Restart Apache
+
+  - name: Start Apache Web Server and make it enabled on boot
+    service: name=httpd state=started enabled=yes
+
+  - name: Open port for http
+    firewalld:
+      service: http 
+      zone: public
+      state: enabled
+      permanent: yes
+      immediate: yes
+
+
+  handlers:
+  - name: Restart Apache
+    service: name=httpd state=restarted

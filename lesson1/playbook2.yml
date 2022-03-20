@@ -1,0 +1,27 @@
+---
+- name: Uninslall Apache web server and demo web page from example servers
+  hosts: exampleservers 
+  become: yes
+
+
+  vars:
+    path_file: /var/www/html
+
+
+  tasks:
+
+  - name: Uninstall Apache Web Server
+    yum: name=httpd state=removed
+
+  - name: Delete index.html to example servers
+    ansible.builtin.file: 
+       path: '{{ path_file }}'
+       state: absent
+
+  - name: Open port for http
+    firewalld:
+      service: http 
+      zone: public
+      state: disabled
+      permanent: yes
+      immediate: yes

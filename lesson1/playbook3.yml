@@ -1,0 +1,23 @@
+---
+- name: Change grub on example servers
+  hosts: exampleservers 
+  become: yes
+
+
+  vars:
+    target_file: /etc/default/grub
+    params: net.ifnames=0 biosdevname=0
+
+
+  tasks:
+
+  - name: Delete index.html to example servers
+    lineinfile:
+       state: present
+       backrefs: yes
+       dest: '{{ target_file }}'
+       regexp: '^(GRUB_CMDLINE_LINUX=(?!.* {{ params }})\"[^\"]+)(\".*)'
+       line: '\1 {{ params }}\2'
+
+
+    
