@@ -1,0 +1,23 @@
+---
+- name: Add users
+  hosts: exampleservers
+  become: yes
+
+  
+  vars_files:
+    - secret.yml
+
+
+  tasks:
+    
+    - name: Add user
+      ansible.builtin.user:
+        name: '{{ item.name }}'
+        password: "{{ pwhash | password_hash('sha512') }}"
+        create_home: yes
+        home: /customhome/{{ item.name }}
+        comment: '{{ item.name }}@example.com'
+      loop:
+        - name: alice
+        - name: bob
+        - name: carol
