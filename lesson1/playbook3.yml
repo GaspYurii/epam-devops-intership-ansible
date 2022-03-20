@@ -20,4 +20,5 @@
        line: '\1 {{ params }}\2'
 
 
-    
+  - name: Confirm changes
+    command: /usr/sbin/grub2-mkconfig 
