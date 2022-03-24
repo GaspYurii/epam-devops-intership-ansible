@@ -1,0 +1,7 @@
+---
+# handlers file for roles/role-2
+#
+- name: Restart vsftpd
+  systemd:
+    name: vsftpd.service
+    state: restarted

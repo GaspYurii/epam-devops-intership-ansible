@@ -1,0 +1,4 @@
+---
+# vars file for role-1
+#
+destination_file: /var/www/html/

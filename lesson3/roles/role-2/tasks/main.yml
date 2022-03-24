@@ -1,0 +1,53 @@
+---
+# tasks file for roles/role-2
+#
+- name: Install FTP service
+  package:
+    name: vsftpd
+    state: present
+
+- name:
+  template: src=vsftpdconf.j2 dest=/etc/vsftpd/vsftpd.conf
+  notify:
+    - Restart vsftpd
+
+- name: Enable FTP service
+  systemd:
+    name: vsftpd.service
+    state: started
+    enabled: yes
+
+- name: Open ports for FTP
+  firewalld:
+    service: ftp
+    zone: public
+    state: enabled
+    permanent: yes
+    immediate: yes 
+
+- name: Create Upload directory
+  file:
+    path: /var/ftp/pub/upload
+    state: directory
+    owner: 'ftp'
+    group: 'ftp'
+    mode: '777'
+    setype: 'public_content_rw_t'
+    seuser: 'system_u'
+
+- name: Install libselinux-python
+  package:
+    name: libselinux-python
+    state: present
+
+- name: Install libsemanage-python
+  package:
+    name: libsemanage-python
+    state: present
+
+- name: Enable anon write
+  seboolean:
+    name: ftpd_anon_write
+    state: yes
+    persistent: yes
+ 

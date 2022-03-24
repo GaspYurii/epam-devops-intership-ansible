@@ -1,0 +1,8 @@
+---
+- name: Inslall Apache web server and demo web page to example servers
+  hosts: exampleservers 
+  become: yes
+
+
+  roles:
+    - role-1

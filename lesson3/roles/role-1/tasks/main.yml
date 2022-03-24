@@ -1,0 +1,32 @@
+---
+# tasks file for role-1
+#
+#
+
+- name: Install Apache
+  package:
+    name: httpd
+    state: present
+  when: ansible_facts['os_family'] == "RedHat"
+
+- name: Copy index.html to example servers
+  copy: src=index.html dest={{ destination_file }} mode=0555
+  notify: Restart Apache
+
+- name: Start Apache Web Server and make it enabled on boot
+  service: name=httpd state=started enabled=yes
+
+- name: Open port for http
+  firewalld:
+    service: http
+    zone: public
+    state: enabled
+    permanent: yes
+    immediate: yes
+
+- name: Service facts
+  service_facts:
+
+- name: Check Apache state
+  debug:
+    msg: "Apache web server state is {{ ansible_facts.services['httpd.service'].state }} and status is {{ ansible_facts.services['httpd.service'].status }}"
