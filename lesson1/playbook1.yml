@@ -5,7 +5,7 @@
 
 
   vars:
-    source_file: /home/ansible/ansible-homework/lesson1/index.html
+    source_file: ./index.html
     destination_file: /var/www/html
 
 
